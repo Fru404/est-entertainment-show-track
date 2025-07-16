@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EST",
+  title: "est",
   description: "Add and manage your movie watchlist",
 };
 

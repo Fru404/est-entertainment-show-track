@@ -2,12 +2,16 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
+import Link from "next/link";
+import Image from "next/image";
+import est from "@/public/est.png";
 type Movie = {
   id: number;
   title: string;
   season: number;
   episode: number;
-  date: string;
+  start_date: string;
+  end_date: string;
   genre: string;
   link: string;
   status: string;
@@ -17,7 +21,8 @@ export default function AddShowPage() {
     title: "",
     season: "",
     episode: "",
-    date: "",
+    start_date: "",
+    end_date: "",
     genre: "",
     link: "",
     status: "",
@@ -34,7 +39,16 @@ export default function AddShowPage() {
   const AddShow = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { title, season, episode, date, genre, link, status } = formData;
+    const {
+      title,
+      season,
+      episode,
+      start_date,
+      end_date,
+      genre,
+      link,
+      status,
+    } = formData;
 
     const randomId = Math.floor(Math.random() * 1_000_000) + 1;
 
@@ -44,7 +58,8 @@ export default function AddShowPage() {
         title,
         season,
         episode,
-        date,
+        start_date,
+        end_date,
         genre,
         link,
         status,
@@ -59,7 +74,8 @@ export default function AddShowPage() {
       title: "",
       season: "",
       episode: "",
-      date: "",
+      start_date: "",
+      end_date: "",
       genre: "",
       link: "",
       status: "",
@@ -69,6 +85,16 @@ export default function AddShowPage() {
   return (
     <>
       <main>
+        <span>
+          <Link href="/">
+            <Image
+              src={est}
+              alt="Logo"
+              height={100}
+              style={{ cursor: "pointer" }}
+            />
+          </Link>
+        </span>
         <h2>Add a Movie</h2>
         <form onSubmit={AddShow}>
           <input
@@ -97,8 +123,16 @@ export default function AddShowPage() {
           />
           <input
             type="date"
-            name="date"
-            value={formData.date}
+            name="start_date"
+            placeholder="Start Date"
+            value={formData.start_date}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="date"
+            name="end_date"
+            value={formData.end_date}
             onChange={handleChange}
             required
           />
