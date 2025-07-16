@@ -82,3 +82,26 @@ form button {
 form button:hover {
   background-color: #005bb5;
 }
+button {
+  background-color: #ffd600;
+  color: #222;
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: #ffe066;
+}
+
+button a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
