@@ -74,7 +74,7 @@ export default function Home() {
         </Link>
       </span>
       <button>
-        <a href="/add-watch">Add watch</a>
+        <a href="/add-watch">Add to Watchlist</a>
       </button>
       <div className="movie-grid">
         {movies.length === 0 ? (
