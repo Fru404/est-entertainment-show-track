@@ -1,5 +1,6 @@
 main {
   padding: 2rem;
+  padding-top: 150px; /* add extra space for fixed top-bar */
   font-family: sans-serif;
   background-color: #f4f4f4;
   min-height: 100vh;
@@ -8,6 +9,8 @@ main {
 h1, h2 {
   color: #333;
   margin-bottom: 1rem;
+  /* Responsive font sizing */
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
 }
 
 .movie-grid {
@@ -61,6 +64,8 @@ form {
   max-width: 400px;
   margin-bottom: 3rem;
   color: black;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 form input,
@@ -69,11 +74,13 @@ form button {
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 form button {
   background-color: #0070f3;
-  color:white;
+  color: white;
   cursor: pointer;
   border: none;
   transition: background 0.3s;
@@ -82,6 +89,7 @@ form button {
 form button:hover {
   background-color: #005bb5;
 }
+
 button {
   background-color: #ffd600;
   color: #222;
@@ -105,6 +113,7 @@ button a {
   width: 100%;
   height: 100%;
 }
+
 .rating-container {
   display: flex;
   flex-wrap: wrap;
@@ -143,28 +152,29 @@ button a {
   background: #ffd600;
   color: white;
 }
+
 .watchlist-btn {
   background: none;
-  top: 8px;    /* distance from top edge */
-  right: 8px;  /* distance from right edge */
-  background: none;
+  top: 8px;
+  right: 8px;
   border: none;
   cursor: pointer;
   font-size: 1.4rem;
   color: #5e386e;
-  margin: 0;   /* remove margin since positioning is absolute */
+  margin: 0;
   padding: 4px;
-  z-index: 10; 
+  z-index: 10;
 }
 
 /*.watchlist-btn:hover {
   color: #ff8c00;
-}
-.movie-card img {
+}*/
+/*.movie-card img {
   width: 100%;
   height: auto;
   border-radius: 8px;
 }*/
+
 .watchlist {
   position: fixed;
   top: 40px;
@@ -172,9 +182,9 @@ button a {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #f4f0fa;  /* very light purple background */
-  border: 1.5px solid #5e386e; /* subtle border in your purple */
-  border-radius: 0 8px 8px 0;  /* rounded on right side only */
+  background-color: #f4f0fa;
+  border: 1.5px solid #5e386e;
+  border-radius: 0 8px 8px 0;
   padding: 10px 16px;
   cursor: pointer;
   color: #5e386e;
@@ -192,7 +202,7 @@ button a {
 }
 
 .watchlist a {
-  color: inherit;      /* inherit color from button */
+  color: inherit;
   text-decoration: none;
   font-weight: 600;
 }
@@ -206,16 +216,18 @@ button a {
   height: 20px;
   fill: currentColor;
 }
+
 .remove-btn {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.2rem;
-  color: black; /* red color for remove button */
+  color: black;
   position: absolute;
-  top: 8px;    /* distance from top edge */
-  right: 8px;  /* distance from right edge */
+  top: 8px;
+  right: 8px;
 }
+
 .add-watch-btn {
   display: inline-block;
   background-color: #5e386e;
@@ -233,6 +245,7 @@ button a {
 .add-watch-btn:hover {
   background-color: #7b4c90;
 }
+
 .top-bar {
   position: fixed;
   top: 0;
@@ -257,6 +270,7 @@ button a {
   gap: 20px;
   font-weight: 600;
   font-size: 1rem;
+  flex-wrap: wrap;
 }
 
 .top-bar .search-container {
@@ -272,6 +286,7 @@ button a {
   font-size: 1rem;
   width: 100%;
   max-width: 300px;
+  box-sizing: border-box;
 }
 
 .top-bar .watch-btn {
@@ -290,3 +305,81 @@ button a {
   background-color: #ffe066;
 }
 
+/* Responsive Media Queries */
+
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .movie-card {
+    padding: 0.75rem;
+  }
+
+  .movie-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .top-bar .top-texts {
+    justify-content: center;
+  }
+
+  .top-bar .search-container {
+    justify-content: stretch;
+  }
+
+  .top-bar input[type="text"] {
+    max-width: 100%;
+  }
+
+  form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  h1, h2 {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+  }
+
+  .movie-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .movie-card {
+    padding: 0.5rem;
+  }
+
+  .movie-card h3 {
+    font-size: 1rem;
+  }
+
+  .top-bar {
+    width: 95%;
+    padding: 8px 12px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .top-bar .top-texts {
+    font-size: 0.9rem;
+    gap: 10px;
+  }
+
+  .top-bar .watch-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
