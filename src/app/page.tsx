@@ -118,6 +118,9 @@ export default function Home() {
             />
           </Link>
         </span>
+        <button className="watch-btn">
+          <a href="/add-watch">+ Add Watch</a>
+        </button>
         <div className="top-texts">
           <span>Trending</span>
           <span>New Releases</span>
@@ -127,10 +130,6 @@ export default function Home() {
         <div className="search-container">
           <input type="text" placeholder="Search movies..." />
         </div>
-
-        <button className="watch-btn">
-          <a href="/add-watch">+ Add Watch</a>
-        </button>
       </div>
 
       <button className="watchlist">
