@@ -74,6 +74,10 @@ export default function Home() {
       timer: getNextEpisodeCountdown(movie.start_date),
       computedStatus: getEpisodeStatus(movie.start_date, movie.end_date),
     }));
+    enrichedData.sort(
+      (a, b) =>
+        new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    );
 
     setMovies(enrichedData);
   }
