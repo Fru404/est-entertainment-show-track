@@ -84,83 +84,96 @@ export default function AddShowPage() {
 
   return (
     <>
-      <main>
+      <main className="add-show-main">
         <span>
           <Link href="/">
             <Image
               src={est}
               alt="Logo"
-              height={100}
+              height={80}
               style={{ cursor: "pointer" }}
             />
           </Link>
         </span>
-        <h2>Add a Movie</h2>
-        <form onSubmit={AddShow}>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            name="season"
-            placeholder="Season"
-            value={formData.season}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            name="episode"
-            placeholder="Episode"
-            value={formData.episode}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            name="start_date"
-            placeholder="Start Date"
-            value={formData.start_date}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            name="end_date"
-            value={formData.end_date}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="genre"
-            placeholder="Genre"
-            value={formData.genre}
-            onChange={handleChange}
-            required
-          />
+        <h2 className="form-title">Add a Movie</h2>
+
+        <form className="add-show-form" onSubmit={AddShow}>
+          <div className="form-row">
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="genre"
+              placeholder="Genre"
+              value={formData.genre}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
+            <input
+              type="number"
+              name="season"
+              placeholder="Season"
+              value={formData.season}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="episode"
+              placeholder="Episode"
+              value={formData.episode}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
+            <input
+              type="date"
+              name="start_date"
+              value={formData.start_date}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="date"
+              name="end_date"
+              value={formData.end_date}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
           <input
             type="text"
             name="link"
-            placeholder="Link"
+            placeholder="Link to Watch"
             value={formData.link}
             onChange={handleChange}
             required
           />
+
           <input
             type="text"
             name="status"
-            placeholder="Status"
+            placeholder="Status (e.g. Watching, Completed)"
             value={formData.status}
             onChange={handleChange}
             required
           />
-          <button type="submit">Submit</button>
+
+          <button type="submit" className="submit-btn">
+            + Add Show
+          </button>
         </form>
       </main>
     </>

@@ -1,11 +1,12 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import { FaRegBookmark } from "react-icons/fa";
 
 type Movie = {
   id: number;
@@ -27,13 +28,17 @@ type MovieWithTimer = Movie & {
 
 export default function Home() {
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
-  const [isClient, setIsClient] = useState(false);
+  const [addingId, setAddingId] = useState<number | null>(null);
+
+  // Fetch movies once on mount, but do NOT set timer/computedStatus here
   useEffect(() => {
-    setIsClient(true);
     fetchMovies();
   }, []);
 
+  // Update timer and computedStatus every second, only on client
   useEffect(() => {
+    if (movies.length === 0) return;
+
     const interval = setInterval(() => {
       setMovies((prevMovies) =>
         prevMovies.map((movie) => ({
@@ -42,12 +47,33 @@ export default function Home() {
           computedStatus: getEpisodeStatus(movie.start_date, movie.end_date),
         }))
       );
-    }, 1000); // Update every second
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [movies.length]);
 
-  const [addingId, setAddingId] = useState<number | null>(null);
+  async function fetchMovies() {
+    const { data, error } = await supabase.from("est").select("*");
+    if (error || data === null) {
+      setMovies([]);
+      return;
+    }
+
+    // Do NOT compute timer/computedStatus here, keep empty strings to avoid SSR mismatch
+    const enrichedData = data.map((movie) => ({
+      ...movie,
+      timer: "",
+      computedStatus: "",
+    }));
+
+    enrichedData.sort(
+      (a, b) =>
+        new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    );
+
+    setMovies(enrichedData);
+  }
+
   async function addWatchlist(showid: number) {
     setAddingId(showid);
     const { error } = await supabase
@@ -61,26 +87,7 @@ export default function Home() {
       alert("Added to watchlist!");
     }
   }
-  async function fetchMovies() {
-    const { data, error } = await supabase.from("est").select("*");
-    if (data === null || error) {
-      setMovies([]);
-      return;
-    }
 
-    // Add timer and status to each movie
-    const enrichedData = data.map((movie) => ({
-      ...movie,
-      timer: getNextEpisodeCountdown(movie.start_date),
-      computedStatus: getEpisodeStatus(movie.start_date, movie.end_date),
-    }));
-    enrichedData.sort(
-      (a, b) =>
-        new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
-    );
-
-    setMovies(enrichedData);
-  }
   async function handleRating(movieId: number, rating: number) {
     const { error } = await supabase
       .from("est")
@@ -110,10 +117,22 @@ export default function Home() {
           />
         </Link>
       </span>
-      <span></span>
-      <button>
-        <a href="/add-watch">Add watch</a>
-      </button>
+      <div className="top-bar">
+        <div className="top-texts">
+          <span>Trending</span>
+          <span>New Releases</span>
+          <span>Top Rated</span>
+        </div>
+
+        <div className="search-container">
+          <input type="text" placeholder="Search movies..." />
+        </div>
+
+        <button className="watch-btn">
+          <a href="/add-watch">+ Add Watch</a>
+        </button>
+      </div>
+
       <button className="watchlist">
         <FaRegBookmark />
         <a href="/watch-list">WatchList</a>
@@ -137,8 +156,11 @@ export default function Home() {
               <p>Start Date: {movie.start_date}</p>
               <p>End Date: {movie.end_date}</p>
               <p>Genre: {movie.genre}</p>
-              <p>Status: {movie.computedStatus}</p>
-              <p>{movie.computedStatus === "Ongoing" && movie.timer}</p>
+              <p>Status: {movie.computedStatus || "Loading..."}</p>
+              {movie.computedStatus === "Ongoing" && movie.timer && (
+                <p>{movie.timer}</p>
+              )}
+
               <a href={movie.link} target="_blank" rel="noopener noreferrer">
                 More
               </a>

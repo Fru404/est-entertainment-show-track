@@ -216,3 +216,77 @@ button a {
   top: 8px;    /* distance from top edge */
   right: 8px;  /* distance from right edge */
 }
+.add-watch-btn {
+  display: inline-block;
+  background-color: #5e386e;
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.add-watch-btn:hover {
+  background-color: #7b4c90;
+}
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  background-color: #5e386e;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 1000;
+}
+
+.top-bar .top-texts {
+  display: flex;
+  gap: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.top-bar .search-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.top-bar input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.top-bar .watch-btn {
+  background-color: #ffd600;
+  color: #222;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.top-bar .watch-btn:hover {
+  background-color: #ffe066;
+}
+

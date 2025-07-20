@@ -162,3 +162,85 @@ h1, h2 {
     padding: 4px;
   }
 }
+.add-show-main {
+  padding: 3rem 1rem;
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  font-size: 1.8rem;
+  color: #5e386e;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.add-show-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.add-show-form input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.add-show-form input:focus {
+  border-color: #5e386e;
+  outline: none;
+}
+
+.submit-btn {
+  background-color: #5e386e;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #7b4c90;
+}
+.watchlist-header {
+  background-color: #f4f0fa;
+  border-left: 6px solid #5e386e;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(94, 56, 110, 0.1);
+  text-align: center;
+}
+
+.watchlist-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #5e386e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.watchlist-icon {
+  font-size: 1.8rem;
+}

@@ -144,10 +144,29 @@ export default function Home() {
           />
         </Link>
       </span>
-      <div>
-        <h1 color="purple">Watch List</h1>
+      <div className="watchlist-header">
+        <h1>
+          <span role="img" aria-label="watchlist" className="watchlist-icon">
+            🎬
+          </span>
+          Watch List
+        </h1>
       </div>
+      <div className="top-bar">
+        <div className="top-texts">
+          <span>Trending</span>
+          <span>New Releases</span>
+          <span>Top Rated</span>
+        </div>
 
+        <div className="search-container">
+          <input type="text" placeholder="Search show..." />
+        </div>
+
+        <button className="watch-btn">
+          <a href="/add-watch">+ Add Watch</a>
+        </button>
+      </div>
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
