@@ -105,3 +105,114 @@ button a {
   width: 100%;
   height: 100%;
 }
+.rating-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin: 10px 0;
+}
+
+.hex-rating {
+  width: 36px;
+  height: 32px;
+  background: #ccc;
+  clip-path: polygon(
+    50% 0%,
+    93% 25%,
+    93% 75%,
+    50% 100%,
+    7% 75%,
+    7% 25%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: default;
+  transition: background 0.2s;
+}
+
+.hex-rating.clickable {
+  cursor: pointer;
+}
+
+.hex-rating.active {
+  background: #ffd600;
+  color: white;
+}
+.watchlist-btn {
+  background: none;
+  top: 8px;    /* distance from top edge */
+  right: 8px;  /* distance from right edge */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: #5e386e;
+  margin: 0;   /* remove margin since positioning is absolute */
+  padding: 4px;
+  z-index: 10; 
+}
+
+/*.watchlist-btn:hover {
+  color: #ff8c00;
+}
+.movie-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}*/
+.watchlist {
+  position: fixed;
+  top: 40px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f4f0fa;  /* very light purple background */
+  border: 1.5px solid #5e386e; /* subtle border in your purple */
+  border-radius: 0 8px 8px 0;  /* rounded on right side only */
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #5e386e;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-decoration: none;
+  box-shadow: 2px 2px 6px rgba(94, 56, 110, 0.2);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  z-index: 1000;
+}
+
+.watchlist:hover {
+  background-color: #5e386e;
+  color: white;
+}
+
+.watchlist a {
+  color: inherit;      /* inherit color from button */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.watchlist a:hover {
+  text-decoration: underline;
+}
+
+.watchlist svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: black; /* red color for remove button */
+  position: absolute;
+  top: 8px;    /* distance from top edge */
+  right: 8px;  /* distance from right edge */
+}

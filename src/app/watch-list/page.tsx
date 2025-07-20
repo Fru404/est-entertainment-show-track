@@ -1,11 +1,13 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
+import "@/styles/WatchList.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import { FaRegBookmark, FaBookmark, FaTrash } from "react-icons/fa";
 
 type Movie = {
   id: number;
@@ -28,6 +30,8 @@ type MovieWithTimer = Movie & {
 export default function Home() {
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setIsClient(true);
     fetchMovies();
@@ -47,36 +51,51 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [movies.length]);
 
-  const [addingId, setAddingId] = useState<number | null>(null);
-  async function addWatchlist(showid: number) {
-    setAddingId(showid);
-    const { error } = await supabase
-      .from("watch-list")
-      .insert([{ id: showid }]);
-    setAddingId(null);
-
-    if (error) {
-      alert(`Failed to add: ${error.message}`);
-    } else {
-      alert("Added to watchlist!");
-    }
-  }
   async function fetchMovies() {
-    const { data, error } = await supabase.from("est").select("*");
-    if (data === null || error) {
-      setMovies([]);
+    setLoading(true);
+
+    // Step 1: Get watchlist IDs
+    const { data: watchlistIds, error: watchlistError } = await supabase
+      .from("watch-list")
+      .select("id");
+
+    if (watchlistError) {
+      console.error("Failed to fetch watchlist IDs:", watchlistError);
+      setLoading(false);
       return;
     }
 
-    // Add timer and status to each movie
-    const enrichedData = data.map((movie) => ({
+    const ids = watchlistIds?.map((item) => item.id) || [];
+
+    if (ids.length === 0) {
+      setMovies([]);
+      setLoading(false);
+      return;
+    }
+
+    // Step 2: Fetch movie details from est
+    const { data: moviesData, error: moviesError } = await supabase
+      .from("est")
+      .select("*")
+      .in("id", ids);
+
+    if (moviesError) {
+      console.error("Failed to fetch movies:", moviesError);
+      setLoading(false);
+      return;
+    }
+
+    // Enrich movies with timer and status
+    const enrichedData = (moviesData || []).map((movie) => ({
       ...movie,
       timer: getNextEpisodeCountdown(movie.start_date),
       computedStatus: getEpisodeStatus(movie.start_date, movie.end_date),
     }));
 
     setMovies(enrichedData);
+    setLoading(false);
   }
+
   async function handleRating(movieId: number, rating: number) {
     const { error } = await supabase
       .from("est")
@@ -94,6 +113,25 @@ export default function Home() {
     }
   }
 
+  async function removeFromWatchlist(movieId: number) {
+    const { error } = await supabase
+      .from("watch-list")
+      .delete()
+      .eq("id", movieId);
+
+    if (error) {
+      alert("Failed to remove from watchlist: " + error.message);
+      return;
+    }
+
+    // Remove from local state to update UI immediately
+    setMovies((prevMovies) =>
+      prevMovies.filter((movie) => movie.id !== movieId)
+    );
+  }
+
+  if (loading) return <p>Loading...</p>;
+
   return (
     <main>
       <span>
@@ -106,14 +144,10 @@ export default function Home() {
           />
         </Link>
       </span>
-      <span></span>
-      <button>
-        <a href="/add-watch">Add watch</a>
-      </button>
-      <button className="watchlist">
-        <FaRegBookmark />
-        <a href="/watch-list">WatchList</a>
-      </button>
+      <div>
+        <h1 color="purple">Watch List</h1>
+      </div>
+
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
@@ -121,11 +155,12 @@ export default function Home() {
           movies.map((movie) => (
             <div key={movie.id} className="movie-card">
               <button
-                className="watchlist-btn"
-                onClick={() => addWatchlist(movie.id)}
-                disabled={addingId === movie.id}
+                className="remove-btn"
+                onClick={() => removeFromWatchlist(movie.id)}
+                title="Remove from watchlist"
+                style={{ cursor: "pointer", color: "red", marginTop: "10px" }}
               >
-                <FaRegBookmark />
+                <FaTrash />
               </button>
               <h3>{movie.title}</h3>
               <p>Season: {movie.season}</p>
@@ -135,6 +170,7 @@ export default function Home() {
               <p>Genre: {movie.genre}</p>
               <p>Status: {movie.computedStatus}</p>
               <p>{movie.computedStatus === "Ongoing" && movie.timer}</p>
+
               <a href={movie.link} target="_blank" rel="noopener noreferrer">
                 More
               </a>
