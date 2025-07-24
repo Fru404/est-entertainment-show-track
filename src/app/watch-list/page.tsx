@@ -29,15 +29,21 @@ type MovieWithTimer = Movie & {
 
 export default function Home() {
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
-  const [isClient, setIsClient] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setIsClient(true);
-    fetchMovies();
+    setHasMounted(true);
   }, []);
 
   useEffect(() => {
+    if (!hasMounted) return;
+    fetchMovies();
+  }, [hasMounted]);
+
+  useEffect(() => {
+    if (!hasMounted || movies.length === 0) return;
+
     const interval = setInterval(() => {
       setMovies((prevMovies) =>
         prevMovies.map((movie) => ({
@@ -49,12 +55,11 @@ export default function Home() {
     }, 1000); // Update every second
 
     return () => clearInterval(interval);
-  }, [movies.length]);
+  }, [hasMounted, movies.length]);
 
   async function fetchMovies() {
     setLoading(true);
 
-    // Step 1: Get watchlist IDs
     const { data: watchlistIds, error: watchlistError } = await supabase
       .from("watch-list")
       .select("id");
@@ -73,7 +78,6 @@ export default function Home() {
       return;
     }
 
-    // Step 2: Fetch movie details from est
     const { data: moviesData, error: moviesError } = await supabase
       .from("est")
       .select("*")
@@ -85,7 +89,6 @@ export default function Home() {
       return;
     }
 
-    // Enrich movies with timer and status
     const enrichedData = (moviesData || []).map((movie) => ({
       ...movie,
       timer: getNextEpisodeCountdown(movie.start_date),
@@ -124,13 +127,12 @@ export default function Home() {
       return;
     }
 
-    // Remove from local state to update UI immediately
     setMovies((prevMovies) =>
       prevMovies.filter((movie) => movie.id !== movieId)
     );
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (!hasMounted || loading) return <p>Loading...</p>; // ⛔ Prevent SSR mismatch
 
   return (
     <main>
@@ -144,6 +146,7 @@ export default function Home() {
           />
         </Link>
       </span>
+
       <div className="watchlist-header">
         <h1>
           <span role="img" aria-label="watchlist" className="watchlist-icon">
@@ -152,6 +155,7 @@ export default function Home() {
           Watch List
         </h1>
       </div>
+
       <div className="top-bar">
         <div className="top-texts">
           <span>Trending</span>
@@ -167,6 +171,7 @@ export default function Home() {
           <a href="/add-watch">+ Add Watch</a>
         </button>
       </div>
+
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
@@ -188,7 +193,9 @@ export default function Home() {
               <p>End Date: {movie.end_date}</p>
               <p>Genre: {movie.genre}</p>
               <p>Status: {movie.computedStatus}</p>
-              <p>{movie.computedStatus === "Ongoing" && movie.timer}</p>
+              {movie.computedStatus === "Ongoing" && movie.timer && (
+                <p>{movie.timer}</p>
+              )}
 
               <a href={movie.link} target="_blank" rel="noopener noreferrer">
                 More

@@ -27,17 +27,21 @@ type MovieWithTimer = Movie & {
 };
 
 export default function Home() {
+  const [hasMounted, setHasMounted] = useState(false);
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
   const [addingId, setAddingId] = useState<number | null>(null);
 
-  // Fetch movies once on mount, but do NOT set timer/computedStatus here
   useEffect(() => {
-    fetchMovies();
+    setHasMounted(true);
   }, []);
 
-  // Update timer and computedStatus every second, only on client
   useEffect(() => {
-    if (movies.length === 0) return;
+    if (!hasMounted) return;
+    fetchMovies();
+  }, [hasMounted]);
+
+  useEffect(() => {
+    if (!hasMounted || movies.length === 0) return;
 
     const interval = setInterval(() => {
       setMovies((prevMovies) =>
@@ -50,7 +54,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [movies.length]);
+  }, [hasMounted, movies.length]);
 
   async function fetchMovies() {
     const { data, error } = await supabase.from("est").select("*");
@@ -59,7 +63,6 @@ export default function Home() {
       return;
     }
 
-    // Do NOT compute timer/computedStatus here, keep empty strings to avoid SSR mismatch
     const enrichedData = data.map((movie) => ({
       ...movie,
       timer: "",
@@ -105,6 +108,8 @@ export default function Home() {
     }
   }
 
+  if (!hasMounted) return null; // Prevent SSR mismatch by waiting for client mount
+
   return (
     <main>
       <span>
@@ -117,6 +122,7 @@ export default function Home() {
           />
         </Link>
       </span>
+
       <div className="top-bar">
         <button className="watch-btn">
           <a href="/add-watch">+ Add Watch</a>
@@ -136,6 +142,7 @@ export default function Home() {
         <FaRegBookmark />
         <a href="/watch-list">WatchList</a>
       </button>
+
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
