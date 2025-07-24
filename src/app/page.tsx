@@ -107,17 +107,17 @@ export default function Home() {
 
   return (
     <main>
+      <span>
+        <Link href="/">
+          <Image
+            src={est}
+            alt="Logo"
+            height={100}
+            style={{ cursor: "pointer" }}
+          />
+        </Link>
+      </span>
       <div className="top-bar">
-        <span>
-          <Link href="/">
-            <Image
-              src={est}
-              alt="Logo"
-              height={100}
-              style={{ cursor: "pointer" }}
-            />
-          </Link>
-        </span>
         <button className="watch-btn">
           <a href="/add-watch">+ Add Watch</a>
         </button>
