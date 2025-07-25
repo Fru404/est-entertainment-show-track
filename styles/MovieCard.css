@@ -246,7 +246,7 @@ button a {
   background-color: #7b4c90;
 }
 
-.top-bar {
+.top-bar  {
   position: fixed;
   top: 0;
   left: 50%;
@@ -287,6 +287,22 @@ button a {
   width: 100%;
   max-width: 300px;
   box-sizing: border-box;
+}
+.addwatch {
+  display: inline-block;
+  background-color: #f6d500;
+  color: #5E386E;
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.addwatch:hover {
+  background-color: #f6d500; /* Slightly darker yellow */
+  cursor: pointer;
 }
 
 .top-bar .watch-btn {

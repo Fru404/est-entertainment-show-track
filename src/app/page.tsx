@@ -124,17 +124,15 @@ export default function Home() {
       </span>
 
       <div className="top-bar">
-        <button className="watch-btn">
-          <a href="/add-watch">+ Add Watch</a>
-        </button>
         <div className="top-texts">
+          <span>
+            <a className=" addwatch" href="/add-watch">
+              + Add Watch
+            </a>
+          </span>
           <span>Trending</span>
           <span>New Releases</span>
           <span>Top Rated</span>
-        </div>
-
-        <div className="search-container">
-          <input type="text" placeholder="Search movies..." />
         </div>
       </div>
 
