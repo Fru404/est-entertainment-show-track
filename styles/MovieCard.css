@@ -1,6 +1,5 @@
 main {
   padding: 2rem;
-  padding-top: 80px; /* add extra space for fixed top-bar */
   font-family: sans-serif;
   background-color: #f4f4f4;
   min-height: 100vh;
@@ -9,7 +8,6 @@ main {
 h1, h2 {
   color: #333;
   margin-bottom: 1rem;
-  /* Responsive font sizing */
   font-size: clamp(1.5rem, 2vw, 2.5rem);
 }
 
@@ -166,18 +164,9 @@ button a {
   z-index: 10;
 }
 
-/*.watchlist-btn:hover {
-  color: #ff8c00;
-}*/
-/*.movie-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}*/
-
 .watchlist {
   position: fixed;
-  top: 40px;
+  top: 100px;
   right: 0;
   display: flex;
   align-items: center;
@@ -246,23 +235,18 @@ button a {
   background-color: #7b4c90;
 }
 
-.top-bar  {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 1000px;
+/* ✅ Static Top Bar (not fixed) */
+.top-bar {
+  width: 100%;
   background: none;
-  color:black;
+  color: black;
   padding: 10px 20px;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  z-index: 1000;
 }
 
 .top-bar .top-texts {
@@ -288,6 +272,7 @@ button a {
   max-width: 300px;
   box-sizing: border-box;
 }
+
 .addwatch {
   display: inline-block;
   background-color: #f6d500;
@@ -301,7 +286,7 @@ button a {
 }
 
 .addwatch:hover {
-  background-color: #f6d500; /* Slightly darker yellow */
+  background-color: #f6d500;
   cursor: pointer;
 }
 
@@ -322,7 +307,6 @@ button a {
 }
 
 /* Responsive Media Queries */
-
 @media (max-width: 768px) {
   main {
     padding: 1rem;
@@ -384,9 +368,9 @@ button a {
   }
 
   .top-bar {
-    width: 95%;
+    width: 100%;
     padding: 8px 12px;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0;
   }
 
   .top-bar .top-texts {
@@ -399,3 +383,4 @@ button a {
     font-size: 0.9rem;
   }
 }
+  

@@ -112,17 +112,6 @@ export default function Home() {
 
   return (
     <main>
-      <span>
-        <Link href="/">
-          <Image
-            src={est}
-            alt="Logo"
-            height={100}
-            style={{ cursor: "pointer" }}
-          />
-        </Link>
-      </span>
-
       <div className="top-bar">
         <div className="top-texts">
           <span>
@@ -135,7 +124,16 @@ export default function Home() {
           <span>Top Rated</span>
         </div>
       </div>
-
+      <span>
+        <Link href="/">
+          <Image
+            src={est}
+            alt="Logo"
+            height={100}
+            style={{ cursor: "pointer" }}
+          />
+        </Link>
+      </span>
       <button className="watchlist">
         <FaRegBookmark />
         <a href="/watch-list">WatchList</a>
