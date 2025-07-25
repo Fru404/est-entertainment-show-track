@@ -1,7 +1,7 @@
 {
   "name": "est",
   "short_name": "est",
-  "description": "My awesome Next.js Progressive Web App",
+  "description": "entertainment show track(est)",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#5E386E",
