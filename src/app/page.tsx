@@ -30,6 +30,7 @@ export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
   const [addingId, setAddingId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setHasMounted(true);
@@ -108,7 +109,7 @@ export default function Home() {
     }
   }
 
-  if (!hasMounted) return null; // Prevent SSR mismatch by waiting for client mount
+  if (!hasMounted) return null;
 
   return (
     <main>
@@ -122,8 +123,19 @@ export default function Home() {
           <span>Trending</span>
           <span>New Releases</span>
           <span>Top Rated</span>
+          {/* Search input */}
+          <div style={{ textAlign: "right", margin: "20px" }}>
+            <input
+              type="text"
+              placeholder="Search movies..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-container"
+            />
+          </div>
         </div>
       </div>
+
       <span>
         <Link href="/">
           <Image
@@ -134,54 +146,60 @@ export default function Home() {
           />
         </Link>
       </span>
+
       <button className="watchlist">
         <FaRegBookmark />
         <a href="/watch-list">WatchList</a>
       </button>
 
+      {/* Movie grid */}
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
         ) : (
-          movies.map((movie) => (
-            <div key={movie.id} className="movie-card">
-              <button
-                className="watchlist-btn"
-                onClick={() => addWatchlist(movie.id)}
-                disabled={addingId === movie.id}
-              >
-                <FaRegBookmark />
-              </button>
-              <h3>{movie.title}</h3>
-              <p>Season: {movie.season}</p>
-              <p>Episode: {movie.episode}</p>
-              <p>Start Date: {movie.start_date}</p>
-              <p>End Date: {movie.end_date}</p>
-              <p>Genre: {movie.genre}</p>
-              <p>Status: {movie.computedStatus || "Loading..."}</p>
-              {movie.computedStatus === "Ongoing" && movie.timer && (
-                <p>{movie.timer}</p>
-              )}
+          movies
+            .filter((movie) =>
+              movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <button
+                  className="watchlist-btn"
+                  onClick={() => addWatchlist(movie.id)}
+                  disabled={addingId === movie.id}
+                >
+                  <FaRegBookmark />
+                </button>
+                <h3>{movie.title}</h3>
+                <p>Season: {movie.season}</p>
+                <p>Episode: {movie.episode}</p>
+                <p>Start Date: {movie.start_date}</p>
+                <p>End Date: {movie.end_date}</p>
+                <p>Genre: {movie.genre}</p>
+                <p>Status: {movie.computedStatus || "Loading..."}</p>
+                {movie.computedStatus === "Ongoing" && movie.timer && (
+                  <p>{movie.timer}</p>
+                )}
 
-              <a href={movie.link} target="_blank" rel="noopener noreferrer">
-                More
-              </a>
+                <a href={movie.link} target="_blank" rel="noopener noreferrer">
+                  More
+                </a>
 
-              <div className="rating-container">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`hex-rating clickable ${
-                      i < movie.rating ? "active" : ""
-                    }`}
-                    onClick={() => handleRating(movie.id, i + 1)}
-                  >
-                    <span>{i + 1}</span>
-                  </div>
-                ))}
+                <div className="rating-container">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`hex-rating clickable ${
+                        i < movie.rating ? "active" : ""
+                      }`}
+                      onClick={() => handleRating(movie.id, i + 1)}
+                    >
+                      <span>{i + 1}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))
+            ))
         )}
       </div>
     </main>

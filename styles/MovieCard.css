@@ -196,9 +196,6 @@ button a {
   font-weight: 600;
 }
 
-.watchlist a:hover {
-  text-decoration: underline;
-}
 
 .watchlist svg {
   width: 20px;
