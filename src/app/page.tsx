@@ -6,7 +6,7 @@ import "@/styles/MovieCard.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaRegBookmark } from "react-icons/fa";
+import { FaRegBookmark, FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 type Movie = {
@@ -167,7 +167,11 @@ export default function Home() {
       console.error("Failed to update rating:", error.message);
     }
   }
-
+  // Logout
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
   if (!hasMounted) return null;
 
   return (
@@ -208,10 +212,14 @@ export default function Home() {
                   style={{ borderRadius: "50%", marginRight: "10px" }}
                 />
               </a>
-
               <span style={{ fontSize: "0.8rem" }}>
                 {profile ? profile.username : "Loading..."}
               </span>
+              <div>
+                <button className="logout-btn" onClick={handleLogout}>
+                  <FaSignOutAlt className="text-lg" />
+                </button>
+              </div>
             </div>
           )}
         </div>

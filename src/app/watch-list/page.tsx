@@ -7,7 +7,7 @@ import "@/styles/WatchList.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaRegBookmark, FaBookmark, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 
 type Movie = {
   id: number;
@@ -27,21 +27,64 @@ type MovieWithTimer = Movie & {
   computedStatus: string;
 };
 
-export default function Home() {
+export default function WatchListPage() {
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
   const [hasMounted, setHasMounted] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // 🔍 New state for search
+  const [searchTerm, setSearchTerm] = useState("");
+  const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<{ username: string } | null>(null);
 
   useEffect(() => {
     setHasMounted(true);
   }, []);
 
+  // Get session and subscribe to auth changes
   useEffect(() => {
-    if (!hasMounted) return;
-    fetchMovies();
-  }, [hasMounted]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Fetch user profile after session is set
+  useEffect(() => {
+    if (!session) return;
+
+    const fetchProfile = async () => {
+      const { data, error } = await supabase
+        .from("user-data")
+        .select("username")
+        .eq("email", session.user.email)
+        .single();
+
+      if (!error && data) {
+        setProfile(data);
+      } else {
+        console.error("Error fetching profile:", error?.message);
+        setProfile(null);
+      }
+    };
+
+    fetchProfile();
+  }, [session]);
+
+  // Fetch movies after profile is loaded
+  useEffect(() => {
+    if (!hasMounted || !profile) return;
+    fetchMovies();
+  }, [hasMounted, profile]);
+
+  // Timer updater
   useEffect(() => {
     if (!hasMounted || movies.length === 0) return;
 
@@ -61,9 +104,17 @@ export default function Home() {
   async function fetchMovies() {
     setLoading(true);
 
+    if (!profile?.username) {
+      console.warn("Username not loaded yet.");
+      setLoading(false);
+      return;
+    }
+
+    // Get movie IDs from watch-list for current user
     const { data: watchlistIds, error: watchlistError } = await supabase
       .from("watch-list")
-      .select("id");
+      .select("id")
+      .eq("username", profile.username);
 
     if (watchlistError) {
       console.error("Failed to fetch watchlist IDs:", watchlistError);
@@ -79,6 +130,7 @@ export default function Home() {
       return;
     }
 
+    // Fetch actual movie data
     const { data: moviesData, error: moviesError } = await supabase
       .from("est")
       .select("*")
@@ -121,7 +173,8 @@ export default function Home() {
     const { error } = await supabase
       .from("watch-list")
       .delete()
-      .eq("id", movieId);
+      .eq("id", movieId)
+      .eq("username", profile?.username); // optional safety
 
     if (error) {
       alert("Failed to remove from watchlist: " + error.message);
@@ -132,8 +185,6 @@ export default function Home() {
       prevMovies.filter((movie) => movie.id !== movieId)
     );
   }
-
-  if (!hasMounted || loading) return <p>Loading...</p>;
 
   return (
     <main>
@@ -158,7 +209,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       <span>
         <Link href="/">
           <Image
@@ -172,7 +222,7 @@ export default function Home() {
 
       <div className="movie-grid">
         {movies.length === 0 ? (
-          <p>No movies found.</p>
+          <p style={{ color: "black" }}>Sign in to view watch-list</p>
         ) : (
           movies
             .filter((movie) =>
