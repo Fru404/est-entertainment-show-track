@@ -7,6 +7,7 @@ import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
 import { FaRegBookmark } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 type Movie = {
   id: number;
@@ -31,6 +32,12 @@ export default function Home() {
   const [movies, setMovies] = useState<MovieWithTimer[]>([]);
   const [addingId, setAddingId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(true);
+  const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [session, setSession] = useState<any>(null);
+  const router = useRouter();
+  const [profile, setProfile] = useState<{ username: string } | null>(null);
 
   useEffect(() => {
     setHasMounted(true);
@@ -40,7 +47,21 @@ export default function Home() {
     if (!hasMounted) return;
     fetchMovies();
   }, [hasMounted]);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
   useEffect(() => {
     if (!hasMounted || movies.length === 0) return;
 
@@ -56,6 +77,35 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [hasMounted, movies.length]);
+  useEffect(() => {
+    if (!session) return;
+
+    const fetchProfile = async () => {
+      const { data, error } = await supabase
+        .from("user-data")
+        .select("username")
+        .eq("email", session.user.email)
+        .single();
+
+      if (!error && data) {
+        setProfile(data);
+      } else {
+        setProfile(null);
+      }
+    };
+
+    fetchProfile();
+  }, [session]);
+
+  function generateUserId(): string {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
 
   async function fetchMovies() {
     const { data, error } = await supabase.from("est").select("*");
@@ -79,10 +129,16 @@ export default function Home() {
   }
 
   async function addWatchlist(showid: number) {
+    if (!userId) {
+      alert("Please enter your name to continue.");
+      setShowModal(true);
+      return;
+    }
+
     setAddingId(showid);
     const { error } = await supabase
       .from("watch-list")
-      .insert([{ id: showid }]);
+      .insert([{ show_id: showid, user_id: userId, user_name: userName }]);
     setAddingId(null);
 
     if (error) {
@@ -123,7 +179,6 @@ export default function Home() {
           <span>Trending</span>
           <span>New Releases</span>
           <span>Top Rated</span>
-          {/* Search input */}
           <div style={{ textAlign: "right", margin: "20px" }}>
             <input
               type="text"
@@ -133,6 +188,29 @@ export default function Home() {
               className="search-container"
             />
           </div>
+          {!session ? (
+            <span>
+              <a className=" addwatch" href="/signin">
+                Sign in
+              </a>
+            </span>
+          ) : (
+            <div className="user-profile">
+              <a href="/profile">
+                <img
+                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${session.user.email}`}
+                  alt="User Avatar"
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "50%", marginRight: "10px" }}
+                />
+              </a>
+
+              <span style={{ fontSize: "0.8rem" }}>
+                {profile ? profile.username : "Loading..."}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -152,7 +230,6 @@ export default function Home() {
         <a href="/watch-list">WatchList</a>
       </button>
 
-      {/* Movie grid */}
       <div className="movie-grid">
         {movies.length === 0 ? (
           <p>No movies found.</p>
