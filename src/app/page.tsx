@@ -129,16 +129,19 @@ export default function Home() {
   }
 
   async function addWatchlist(showid: number) {
-    if (!userId) {
-      alert("Please enter your name to continue.");
+    if (!session) {
+      alert("Signin to add to watchlist");
       setShowModal(true);
       return;
     }
 
     setAddingId(showid);
-    const { error } = await supabase
-      .from("watch-list")
-      .insert([{ show_id: showid, user_id: userId, user_name: userName }]);
+    const { error } = await supabase.from("watch-list").insert([
+      {
+        id: showid,
+        username: profile ? profile.username : session.user.email,
+      },
+    ]);
     setAddingId(null);
 
     if (error) {
