@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
 import "@/styles/SignIn.css";
 import { useRouter } from "next/navigation";
+import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export default function Home() {
     password: "",
   });
 
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
   // Track auth session
   useEffect(() => {

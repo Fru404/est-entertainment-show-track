@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
+import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 export default function ProfilePage() {
   const [name, setName] = useState("");
 
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
 
   useEffect(() => {
