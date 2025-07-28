@@ -8,6 +8,7 @@ import est from "@/public/est.png";
 import Link from "next/link";
 import { FaRegBookmark, FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 type Movie = {
   id: number;
@@ -35,7 +36,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(true);
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState("");
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null); // ✅ FIX
   const router = useRouter();
   const [profile, setProfile] = useState<{ username: string } | null>(null);
 
@@ -47,6 +48,7 @@ export default function Home() {
     if (!hasMounted) return;
     fetchMovies();
   }, [hasMounted]);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -62,6 +64,7 @@ export default function Home() {
       listener.subscription.unsubscribe();
     };
   }, []);
+
   useEffect(() => {
     if (!hasMounted || movies.length === 0) return;
 
@@ -77,6 +80,7 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [hasMounted, movies.length]);
+
   useEffect(() => {
     if (!session) return;
 
@@ -167,11 +171,12 @@ export default function Home() {
       console.error("Failed to update rating:", error.message);
     }
   }
-  // Logout
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSession(null);
   };
+
   if (!hasMounted) return null;
 
   return (
@@ -268,11 +273,9 @@ export default function Home() {
                 {movie.computedStatus === "Ongoing" && movie.timer && (
                   <p>{movie.timer}</p>
                 )}
-
                 <a href={movie.link} target="_blank" rel="noopener noreferrer">
                   More
                 </a>
-
                 <div className="rating-container">
                   {[...Array(5)].map((_, i) => (
                     <div

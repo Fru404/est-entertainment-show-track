@@ -8,6 +8,7 @@ import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
 import { FaTrash } from "react-icons/fa";
+import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 type Movie = {
   id: number;
@@ -32,7 +33,7 @@ export default function WatchListPage() {
   const [hasMounted, setHasMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<{ username: string } | null>(null);
 
   useEffect(() => {
