@@ -9,6 +9,7 @@ import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 export default function Home() {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
   });
@@ -38,6 +39,14 @@ export default function Home() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formData;
+
+    const { username } = formData;
+    const {} = await supabase.from("user-data").insert([
+      {
+        email: email,
+        username: username,
+      },
+    ]);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -85,6 +94,17 @@ export default function Home() {
       ) : (
         <form onSubmit={handleSignIn} className="auth-form">
           <h2>Sign In / Sign Up</h2>
+          <div className="form-row">
+            <input
+              type="username"
+              placeholder="User Name"
+              value={formData.username}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
+              required
+            />
+          </div>
           <div className="form-row">
             <input
               type="email"
