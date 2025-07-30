@@ -395,3 +395,30 @@ form button:hover {
 .share-watchlist-btn svg {
   font-size: 1.2rem;
 }
+.burger-icon {
+  display: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 10px;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .burger-icon {
+    display: block;
+  }
+
+  .top-texts {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .top-texts.show {
+    display: flex;
+  }
+}

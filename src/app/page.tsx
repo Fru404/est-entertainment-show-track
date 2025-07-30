@@ -6,7 +6,7 @@ import "@/styles/MovieCard.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaRegBookmark, FaSignOutAlt } from "react-icons/fa";
+import { FaRegBookmark, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
@@ -39,6 +39,7 @@ export default function Home() {
   const [session, setSession] = useState<Session | null>(null); // ✅ FIX
   const router = useRouter();
   const [profile, setProfile] = useState<{ username: string } | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -182,9 +183,13 @@ export default function Home() {
   return (
     <main>
       <div className="top-bar">
-        <div className="top-texts">
+        <div className="burger-icon" onClick={() => setShowMenu(!showMenu)}>
+          {showMenu ? <FaTimes /> : <FaBars />}
+        </div>
+
+        <div className={`top-texts ${showMenu ? "show" : ""}`}>
           <span>
-            <a className=" addwatch" href="/add-watch">
+            <a className="addwatch" href="/add-watch">
               + Add Watch
             </a>
           </span>
@@ -200,9 +205,10 @@ export default function Home() {
               className="search-container"
             />
           </div>
+
           {!session ? (
             <span>
-              <a className=" addwatch" href="/signin">
+              <a className="addwatch" href="/signin">
                 Sign in
               </a>
             </span>
@@ -220,11 +226,9 @@ export default function Home() {
               <span style={{ fontSize: "0.8rem" }}>
                 {profile ? profile.username : "Loading..."}
               </span>
-              <div>
-                <button className="logout-btn" onClick={handleLogout}>
-                  <FaSignOutAlt className="text-lg" />
-                </button>
-              </div>
+              <button className="logout-btn" onClick={handleLogout}>
+                <FaSignOutAlt className="text-lg" />
+              </button>
             </div>
           )}
         </div>
