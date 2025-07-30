@@ -73,7 +73,7 @@ export default function PublicWatchListPage() {
   return (
     <main>
       <h2 style={{ textAlign: "left", padding: "10px" }}>
-        {username}'s Watchlist
+        {username} - Watchlist
       </h2>
       {loading ? (
         <p style={{ textAlign: "center" }}>Loading...</p>
