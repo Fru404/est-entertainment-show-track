@@ -247,7 +247,7 @@ export default function Home() {
 
       <button className="watchlist">
         <FaRegBookmark />
-        <a href="/watch-list">WatchList</a>
+        <Link href="/watch-list">WatchList</Link>
       </button>
 
       <div className="movie-grid">
