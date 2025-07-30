@@ -40,14 +40,6 @@ export default function Home() {
     e.preventDefault();
     const { email, password } = formData;
 
-    const { username } = formData;
-    const {} = await supabase.from("user-data").insert([
-      {
-        email: email,
-        username: username,
-      },
-    ]);
-
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
