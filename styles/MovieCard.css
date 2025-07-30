@@ -366,3 +366,32 @@ form button:hover {
 .logout-btn:hover {
   background-color: #c53030;
 }
+.share-watchlist-btn {
+  background-color: #2d87f0;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.share-watchlist-btn:hover {
+  background-color: #1c6ed2;
+  transform: scale(1.05);
+}
+
+.share-watchlist-btn:active {
+  transform: scale(0.98);
+}
+
+.share-watchlist-btn svg {
+  font-size: 1.2rem;
+}

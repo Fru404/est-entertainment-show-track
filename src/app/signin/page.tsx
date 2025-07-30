@@ -94,17 +94,7 @@ export default function Home() {
       ) : (
         <form onSubmit={handleSignIn} className="auth-form">
           <h2>Sign In / Sign Up</h2>
-          <div className="form-row">
-            <input
-              type="username"
-              placeholder="User Name"
-              value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-              required
-            />
-          </div>
+
           <div className="form-row">
             <input
               type="email"

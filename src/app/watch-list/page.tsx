@@ -7,7 +7,7 @@ import "@/styles/WatchList.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaShareAlt } from "react-icons/fa";
 import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 type Movie = {
@@ -35,7 +35,7 @@ export default function WatchListPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<{ username: string } | null>(null);
-
+  const [copied, setCopied] = useState(false);
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -186,6 +186,16 @@ export default function WatchListPage() {
       prevMovies.filter((movie) => movie.id !== movieId)
     );
   }
+  const handleShare = () => {
+    const username = profile?.username || session?.user?.email;
+
+    if (!username) return;
+
+    const shareUrl = `${window.location.origin}/watch-list/${username}`;
+    navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <main>
@@ -220,6 +230,16 @@ export default function WatchListPage() {
           />
         </Link>
       </span>
+      {session && (
+        <button
+          className="share-watchlist-btn"
+          onClick={handleShare}
+          title="Copy shareable link"
+        >
+          <FaShareAlt />
+          <span>{copied ? "Copied!" : "Share"}</span>
+        </button>
+      )}
 
       <div className="movie-grid">
         {movies.length === 0 ? (
