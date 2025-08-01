@@ -7,7 +7,13 @@ import "@/styles/WatchList.css";
 import Image from "next/image";
 import est from "@/public/est.png";
 import Link from "next/link";
-import { FaTrash, FaShareAlt } from "react-icons/fa";
+import {
+  FaTrash,
+  FaShareAlt,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import { Session } from "@supabase/supabase-js"; // ✅ FIX
 
 type Movie = {
@@ -36,6 +42,8 @@ export default function WatchListPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<{ username: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -196,50 +204,82 @@ export default function WatchListPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
 
   return (
     <main>
       <div className="top-bar">
-        <div className="top-texts">
+        <span>
+          <Link href="/">
+            <Image
+              src={est}
+              alt="Logo"
+              height={100}
+              style={{ cursor: "pointer" }}
+            />
+          </Link>
+        </span>
+        <div className="burger-icon" onClick={() => setShowMenu(!showMenu)}>
+          {showMenu ? <FaTimes /> : <FaBars />}
+        </div>
+
+        <div className={`top-texts ${showMenu ? "show" : ""}`}>
           <span>
             <a className="addwatch" href="/add-watch">
               + Add Watch
             </a>
           </span>
-          <span>Trending</span>
-          <span>New Releases</span>
-          <span>Top Rated</span>
-          <div style={{ textAlign: "center", margin: "20px" }}>
+          <span>
+            <button className="watchlist">
+              <Link href="/watch-list">My watchlist</Link>
+            </button>
+          </span>
+          <span>
+            <button className="watchlist">
+              <Link href="/discover-watchlist">Discover Watchlist</Link>
+            </button>
+          </span>
+
+          <div>
             <input
               type="text"
-              placeholder="Search movies..."
+              placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-container"
             />
           </div>
+
+          {!session ? (
+            <span>
+              <a className="addwatch" href="/signin">
+                Sign in
+              </a>
+            </span>
+          ) : (
+            <div className="user-profile">
+              <button className="logout-btn" onClick={handleLogout}>
+                <FaSignOutAlt className="text-lg" /> log out
+              </button>
+              <a href="/profile">
+                <img
+                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${session.user.email}`}
+                  alt="User Avatar"
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "50%", marginRight: "10px" }}
+                />
+              </a>
+              <span style={{ fontSize: "0.8rem" }}>
+                {profile ? profile.username : "Loading..."}
+              </span>
+            </div>
+          )}
         </div>
       </div>
-      <span>
-        <Link href="/">
-          <Image
-            src={est}
-            alt="Logo"
-            height={100}
-            style={{ cursor: "pointer" }}
-          />
-        </Link>
-      </span>
-      {session && (
-        <button
-          className="share-watchlist-btn"
-          onClick={handleShare}
-          title="Copy shareable link"
-        >
-          <FaShareAlt />
-          <span>{copied ? "Copied!" : "Share"}</span>
-        </button>
-      )}
 
       <div className="movie-grid">
         {movies.length === 0 ? (
@@ -291,6 +331,16 @@ export default function WatchListPage() {
             ))
         )}
       </div>
+      {session && (
+        <button
+          className="share-watchlist-btn"
+          onClick={handleShare}
+          title="Copy shareable link"
+        >
+          <FaShareAlt />
+          <span>{copied ? "Copied!" : "Share my watchlist"}</span>
+        </button>
+      )}
     </main>
   );
 }

@@ -205,7 +205,7 @@ export default function Home() {
           </span>
           <span>
             <button className="watchlist">
-              <Link href="/watch-list">WatchList</Link>
+              <Link href="/watch-list">My Watchlist</Link>
             </button>
           </span>
           <span>Trending</span>
