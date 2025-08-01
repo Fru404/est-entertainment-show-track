@@ -227,7 +227,7 @@ export default function Home() {
                 {profile ? profile.username : "Loading..."}
               </span>
               <button className="logout-btn" onClick={handleLogout}>
-                <FaSignOutAlt className="text-lg" />
+                <FaSignOutAlt className="text-lg" /> log out
               </button>
             </div>
           )}

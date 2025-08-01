@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import "@/styles/MovieCard.css";
 import { Session } from "@supabase/supabase-js";
+import { FaArrowLeft } from "react-icons/fa";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const [name, setName] = useState("");
@@ -82,6 +84,11 @@ export default function ProfilePage() {
 
   return (
     <main style={{ padding: "2rem" }}>
+      <span>
+        <Link href="/" style={{ color: "#000", textDecoration: "none" }}>
+          <FaArrowLeft />
+        </Link>
+      </span>
       <h2>Complete Your Profile</h2>
       <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
         <div style={{ marginBottom: "1rem" }}>

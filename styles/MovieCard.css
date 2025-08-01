@@ -358,7 +358,8 @@ form button:hover {
   }
 }
 .logout-btn {
-  
+  position:absolute;
+  right:150px;
   cursor: pointer;
   
 }
@@ -403,9 +404,23 @@ form button:hover {
 }
 
 /* Mobile styles */
+/* Default (Desktop) */
+.burger-icon {
+  display: none;
+}
+
+.top-texts {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   .burger-icon {
     display: block;
+    font-size: 24px;
+    cursor: pointer;
   }
 
   .top-texts {
@@ -415,7 +430,7 @@ form button:hover {
     background-color: #fff;
     padding: 10px;
     border-top: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 
   .top-texts.show {
