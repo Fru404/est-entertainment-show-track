@@ -110,7 +110,7 @@ export default function Home() {
             />
           </div>
           <div className="form-buttons">
-            <button type="submit">Sign In</button>
+            <button type="submit">Log In</button>
             <button type="button" onClick={handleSignUp}>
               Sign Up
             </button>
