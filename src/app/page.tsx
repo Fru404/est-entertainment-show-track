@@ -183,6 +183,16 @@ export default function Home() {
   return (
     <main>
       <div className="top-bar">
+        <span>
+          <Link href="/">
+            <Image
+              src={est}
+              alt="Logo"
+              height={100}
+              style={{ cursor: "pointer" }}
+            />
+          </Link>
+        </span>
         <div className="burger-icon" onClick={() => setShowMenu(!showMenu)}>
           {showMenu ? <FaTimes /> : <FaBars />}
         </div>
@@ -193,13 +203,18 @@ export default function Home() {
               + Add Watch
             </a>
           </span>
+          <span>
+            <button className="watchlist">
+              <Link href="/watch-list">WatchList</Link>
+            </button>
+          </span>
           <span>Trending</span>
           <span>New Releases</span>
           <span>Top Rated</span>
-          <div style={{ textAlign: "right", margin: "20px" }}>
+          <div>
             <input
               type="text"
-              placeholder="Search movies..."
+              placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-container"
@@ -214,6 +229,9 @@ export default function Home() {
             </span>
           ) : (
             <div className="user-profile">
+              <button className="logout-btn" onClick={handleLogout}>
+                <FaSignOutAlt className="text-lg" /> log out
+              </button>
               <a href="/profile">
                 <img
                   src={`https://api.dicebear.com/7.x/identicon/svg?seed=${session.user.email}`}
@@ -226,29 +244,10 @@ export default function Home() {
               <span style={{ fontSize: "0.8rem" }}>
                 {profile ? profile.username : "Loading..."}
               </span>
-              <button className="logout-btn" onClick={handleLogout}>
-                <FaSignOutAlt className="text-lg" /> log out
-              </button>
             </div>
           )}
         </div>
       </div>
-
-      <span>
-        <Link href="/">
-          <Image
-            src={est}
-            alt="Logo"
-            height={100}
-            style={{ cursor: "pointer" }}
-          />
-        </Link>
-      </span>
-
-      <button className="watchlist">
-        <FaRegBookmark />
-        <Link href="/watch-list">WatchList</Link>
-      </button>
 
       <div className="movie-grid">
         {movies.length === 0 ? (

@@ -88,7 +88,6 @@ form button:hover {
   background-color: #005bb5;
 }
 
-
 .rating-container {
   display: flex;
   flex-wrap: wrap;
@@ -142,29 +141,13 @@ form button:hover {
 }
 
 .watchlist {
-  position: fixed;
-  top: 100px;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #f4f0fa;
-  border: 1.5px solid #5e386e;
-  border-radius: 0 8px 8px 0;
-  padding: 10px 16px;
-  cursor: pointer;
-  color: #5e386e;
-  font-weight: 600;
-  font-size: 1.2rem;
+  text-align: right;
   text-decoration: none;
-  box-shadow: 2px 2px 6px rgba(94, 56, 110, 0.2);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  z-index: 1000;
 }
 
 .watchlist:hover {
-  background-color: #5e386e;
-  color: white;
+  color: #5e386e;
+  text-decoration: underline;
 }
 
 .watchlist a {
@@ -172,7 +155,6 @@ form button:hover {
   text-decoration: none;
   font-weight: 600;
 }
-
 
 .watchlist svg {
   width: 20px;
@@ -209,7 +191,7 @@ form button:hover {
   background-color: #7b4c90;
 }
 
-/* ✅ Static Top Bar (not fixed) */
+/* ✅ Top Bar & Burger Menu */
 .top-bar {
   width: 100%;
   background: none;
@@ -221,28 +203,54 @@ form button:hover {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  position: relative;
+  z-index: 100;
 }
 
-.top-bar .top-texts {
+.burger-icon {
+  display: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+  color: #5e386e;
+}
+
+.top-texts {
   display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* centers vertically */
   gap: 20px;
   font-weight: 600;
   font-size: 1rem;
   flex-wrap: wrap;
+  text-align: center;
 }
 
 .top-bar .search-container {
-  flex: 1;
+  flex: 0 0 auto;       /* don't grow, don't shrink, size based on content */
   display: flex;
   justify-content: center;
+  width: 200px;         /* or any smaller width you want */
+  max-width: 100%;
 }
 
 .top-bar input[type="text"] {
-  padding: 8px 12px;
+  width: 100%;
+  max-width: 200px;     /* restrict input width */
+  padding: 6px 10px;
+  font-size: 0.9rem;
   border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+
+.top-bar input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 20px;
   border: none;
   font-size: 1rem;
-  width: 100%;
+  width: 50%;
   max-width: 300px;
   box-sizing: border-box;
 }
@@ -280,7 +288,7 @@ form button:hover {
   background-color: #ffe066;
 }
 
-/* Responsive Media Queries */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   main {
     padding: 1rem;
@@ -301,21 +309,37 @@ form button:hover {
 
   .top-bar {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
     padding: 10px;
-    gap: 10px;
   }
 
-  .top-bar .top-texts {
-    justify-content: center;
+  .burger-icon {
+    display: block;
   }
 
-  .top-bar .search-container {
-    justify-content: stretch;
+  .top-texts {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    background-color: #fff;
+    padding: 5px;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .top-texts.show {
+    display: flex;
   }
 
   .top-bar input[type="text"] {
     max-width: 100%;
+  }
+
+  .logout-btn {
+    position: static;
+    margin-top: 10px;
+    align-self: flex-start;
   }
 
   form {
@@ -342,7 +366,6 @@ form button:hover {
   }
 
   .top-bar {
-    width: 100%;
     padding: 8px 12px;
     border-radius: 0;
   }
@@ -357,16 +380,17 @@ form button:hover {
     font-size: 0.9rem;
   }
 }
+
 .logout-btn {
-  position:absolute;
-  right:150px;
+  position: absolute;
+  right: 100px;
   cursor: pointer;
-  
 }
 
 .logout-btn:hover {
   background-color: #c53030;
 }
+
 .share-watchlist-btn {
   background-color: #2d87f0;
   color: white;
@@ -395,45 +419,4 @@ form button:hover {
 
 .share-watchlist-btn svg {
   font-size: 1.2rem;
-}
-.burger-icon {
-  display: none;
-  font-size: 1.6rem;
-  cursor: pointer;
-  padding: 10px;
-}
-
-/* Mobile styles */
-/* Default (Desktop) */
-.burger-icon {
-  display: none;
-}
-
-.top-texts {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .burger-icon {
-    display: block;
-    font-size: 24px;
-    cursor: pointer;
-  }
-
-  .top-texts {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  .top-texts.show {
-    display: flex;
-  }
 }
